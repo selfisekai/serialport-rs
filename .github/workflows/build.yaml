@@ -9,6 +9,8 @@ on:
         type: boolean
       extra_packages:
         type: string
+      install_musl_eudev:
+        type: boolean
       runs_on:
         default: ubuntu-latest
         type: string
@@ -57,6 +59,29 @@ jobs:
           sudo sed -i 's/azure.archive.ubuntu.com/archive.ubuntu.com/' /etc/apt/sources.list
           sudo apt-get -qq update
           sudo apt-get -qq -y install build-essential curl git pkg-config ${{ inputs.extra_packages }}
+
+      - name: Build | install musl eudev
+        if: inputs.runs_on == 'ubuntu-latest' && inputs.install_musl_eudev
+        run: |
+          curl -sLO https://gitlab.alpinelinux.org/api/v4/projects/5/packages/generic/v2.14.0/x86_64/apk.static
+          mkdir -p /tmp/alpine-sysroot
+          cat >> ./repositories <<-EOF
+          	https://dl-cdn.alpinelinux.org/alpine/v3.18/main/
+          EOF
+          arch="${{inputs.target}}"
+          arch="${arch/-unknown-linux-musl}"
+          case "$arch" in
+            i*86) arch=x86 ;;
+          esac
+          ./apk.static add \
+            --root /tmp/alpine-sysroot \
+            --repositories-file ./repositories \
+            --allow-untrusted \
+            --no-cache \
+            --no-scripts \
+            --arch "$arch" \
+            eudev-dev
+          echo "PKG_CONFIG_SYSROOT_DIR_${{inputs.target}}=/tmp/alpine-sysroot" >> $GITHUB_ENV
 
       - name: Build | add mingw32 to path
         if: inputs.runs_on == 'windows-2019'

@@ -108,6 +108,7 @@ jobs:
     with:
       disable_tests: true
       extra_packages: gcc-aarch64-linux-gnu
+      install_musl_eudev: true
       target: aarch64-unknown-linux-musl
 
   arm-linux-androideabi:
@@ -147,7 +148,8 @@ jobs:
   i686-unknown-linux-musl:
     uses: ./.github/workflows/build.yaml
     with:
-      extra_packages: libudev-dev gcc-multilib
+      extra_packages: gcc-multilib
+      install_musl_eudev: true
       target: i686-unknown-linux-musl
 
   x86_64-apple-darwin:
@@ -184,6 +186,7 @@ jobs:
   x86_64-unknown-linux-musl:
     uses: ./.github/workflows/build.yaml
     with:
+      install_musl_eudev: true
       target: x86_64-unknown-linux-musl
 
   x86_64-unknown-netbsd:
