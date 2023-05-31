@@ -64,6 +64,7 @@ jobs:
         if: inputs.runs_on == 'ubuntu-latest' && inputs.install_musl_eudev
         run: |
           curl -sLO https://gitlab.alpinelinux.org/api/v4/projects/5/packages/generic/v2.14.0/x86_64/apk.static
+          chmod +x ./apk.static
           mkdir -p /tmp/alpine-sysroot
           cat >> ./repositories <<-EOF
           	https://dl-cdn.alpinelinux.org/alpine/v3.18/main/
