@@ -18,7 +18,7 @@ categories = ["hardware-support"]
 bitflags = "2.4.0"
 nix = { version = "0.26", default-features = false, features = ["fs", "ioctl", "poll", "signal", "term"] }
 
-[target.'cfg(all(target_os = "linux", not(target_env = "musl")))'.dependencies]
+[target.'cfg(all(target_os = "linux"))'.dependencies]
 libudev = { version = "0.3.0", optional = true }
 unescaper = "0.1.3"
 
